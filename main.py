@@ -14,16 +14,20 @@ from typing import Tuple, List, Dict
 
 class VirtualMouse:
     """
-    Main class for AI Virtual Mouse control using hand tracking
+    AI Virtual Mouse: Real-time hand tracking and gesture recognition.
+    
+    This class handles the end-to-end pipeline of capturing frames from a webcam,
+    detecting hand landmarks using MediaPipe, mapping coordinates to the screen,
+    and executing system-level mouse events (movement, clicks, scrolling).
     """
 
     def __init__(self):
-        # Initialize MediaPipe hands
+        # --- MediaPipe Configuration ---
         self.mp_hands = mp.solutions.hands
         self.mp_drawing = mp.solutions.drawing_utils
         self.mp_drawing_styles = mp.solutions.drawing_styles
 
-        # Configure MediaPipe hands
+        # Higher detection confidence reduces false tracking
         self.hands = self.mp_hands.Hands(
             static_image_mode=False,
             max_num_hands=1,
@@ -31,35 +35,37 @@ class VirtualMouse:
             min_tracking_confidence=0.5
         )
 
-        # Mouse control settings
-        pyautogui.FAILSAFE = False  # Disable failsafe for clean exit
+        # --- System & Mouse Settings ---
+        pyautogui.FAILSAFE = False  # Allows moving mouse to screen corners
         self.screen_width, self.screen_height = pyautogui.size()
 
-        # Mouse smoothing parameters
+        # Movement Smoothing (0.0 to 1.0)
+        # Lower values = more smoothing, but more latency
         self.smoothing_factor = 0.4
         self.prev_x, self.prev_y = 0, 0
 
-        # Click detection parameters
-        self.click_distance_threshold = 0.05  # Distance between thumb and index
-        self.click_cooldown = 0.3  # Seconds between clicks
+        # --- Gesture Parameters ---
+        # Click: Distance between THUMB_TIP (4) and INDEX_FINGER_TIP (8)
+        self.click_distance_threshold = 0.05
+        self.click_cooldown = 0.3  # Buffer to prevent double clicks
         self.last_click_time = 0
 
-        # Scroll detection parameters
-        self.scroll_finger_threshold = 0.8  # Y-position for scroll activation
+        # Scroll: Determined by height of INDEX and MIDDLE fingers
+        self.scroll_finger_threshold = 0.8
         self.scroll_speed = 5
 
-        # Camera settings
+        # --- Camera & Tracking Calibration ---
         self.camera_width = 640
         self.camera_height = 480
-        self.detection_region_ratio = 0.8  # Use 80% of frame for mouse control
+        # Only use the center 80% of the frame to map to the full screen
+        self.detection_region_ratio = 0.8
 
-        # Toggle settings
+        # --- Runtime State ---
         self.mouse_control_enabled = True
-        self.toggle_key = ord('t')  # 't' key to toggle mouse control
-
-        # FPS counter
+        self.toggle_key = ord('t')  # Toggle logic control
         self.prev_frame_time = 0
         self.fps = 0
+
 
     def map_coordinates(self, x: float, y: float,
                        frame_width: int, frame_height: int) -> Tuple[int, int]:
