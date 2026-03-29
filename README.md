@@ -54,13 +54,14 @@ The system follows a modular pipeline to ensure low latency and high accuracy:
 ## 🚀 **Quick Start**
 
 ### **1. Environment Setup**
-It is highly recommended to use the provided virtual environment:
+It is highly recommended to use a virtual environment for the setup:
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/ai-virtual-mouse.git
-cd ai-virtual-mouse
+git clone https://github.com/ayushcodes13/gesture-controlled-virtual-mouse.git
+cd gesture-controlled-virtual-mouse
 
-# Activate Virtual Environment
+# Create and Activate Virtual Environment
+python3 -m venv .venv
 source .venv/bin/activate
 
 # Install Dependencies
@@ -69,11 +70,12 @@ pip install -r requirements.txt
 
 ### **2. Launch Application**
 ```bash
+# Run the main application
 python3 main.py
 ```
 
 ### **3. Interaction Guide**
-- **Move Hand**: Keep your hand within the **Blue Rectangle**.
+- **Move Hand**: Keep your hand within the **Blue Rectangle** for tracking.
 - **Toggle Control**: Press `'t'` to enable/disable mouse control safely.
 - **Exit**: Press `'q'` to close the interface.
 
@@ -85,7 +87,7 @@ python3 main.py
 > **Accessibility Permissions**: macOS requires explicit permission for `PyAutoGUI` to control the mouse.
 > 1. Go to **System Settings** > **Privacy & Security**.
 > 2. Click **Accessibility**.
-> 3. Add and enable your **Terminal** and **IDE** (e.g., VS Code).
+> 3. Add and enable your **Terminal** or **IDE** (e.g., VS Code).
 
 > [!TIP]
 > **Webcam Not Opening?** Check if another app (Zoom, Teams) is using the camera. On Apple Silicon (M1/M2/M3), ensure you are using the ARM64 build of Python for maximum performance.
@@ -96,10 +98,10 @@ python3 main.py
 This project was developed as part of a **Computer Vision and HCI** curriculum. It demonstrates the application of real-time pose estimation and its integration with system-level APIs to create seamless human-machine interfaces.
 
 ## 🔮 **Future Scope**
-- [ ] **Multi-Hand Support**: Separate gestures for left and right hands (e.g., zoom/rotate).
+- [ ] **Multi-Hand Support**: Separate gestures for left and right hands.
 - [ ] **Voice Integration**: Voice-activated commands for desktop operations.
 - [ ] **Low-Light Optimization**: Improved tracking using IR-capable webcams.
-- [ ] **Custom Gesture Training**: Allow users to record and map their own gestures.
+- [ ] **Custom Gesture Mapping**: Allow users to record and map their own gestures.
 
 ---
 
@@ -107,5 +109,5 @@ This project was developed as part of a **Computer Vision and HCI** curriculum. 
 Distributed under the MIT License. See `LICENSE` for more information.
 
 ---
-**Developed by [Your Name]**  
+**Developed by [Ayush Rout](https://github.com/ayushcodes13)**  
 *College of Computer Science & Engineering*
