@@ -10,7 +10,10 @@ import numpy as np
 import mediapipe as mp
 import pyautogui
 import time
+from pathlib import Path
 from typing import Tuple, List, Dict
+
+MODEL_PATH = Path(__file__).resolve().parent / "models" / "hand_landmarker.task"
 
 class VirtualMouse:
     """
@@ -23,17 +26,22 @@ class VirtualMouse:
 
     def __init__(self):
         # --- MediaPipe Configuration ---
-        self.mp_hands = mp.solutions.hands
-        self.mp_drawing = mp.solutions.drawing_utils
-        self.mp_drawing_styles = mp.solutions.drawing_styles
-
-        # Higher detection confidence reduces false tracking
-        self.hands = self.mp_hands.Hands(
-            static_image_mode=False,
-            max_num_hands=1,
-            min_detection_confidence=0.7,
-            min_tracking_confidence=0.5
+        if not MODEL_PATH.is_file():
+            raise FileNotFoundError(
+                f"Hand landmark model not found at {MODEL_PATH}. "
+                "Run 'python scripts/download_hand_model.py' first."
+            )
+        self.mp_vision = mp.tasks.vision
+        options = self.mp_vision.HandLandmarkerOptions(
+            base_options=mp.tasks.BaseOptions(model_asset_path=str(MODEL_PATH)),
+            running_mode=self.mp_vision.RunningMode.VIDEO,
+            num_hands=1,
+            min_hand_detection_confidence=0.7,
+            min_hand_presence_confidence=0.5,
+            min_tracking_confidence=0.5,
         )
+        self.hands = self.mp_vision.HandLandmarker.create_from_options(options)
+        self.last_frame_timestamp_ms = -1
 
         # --- System & Mouse Settings ---
         # Keep PyAutoGUI's emergency stop active while the user controls the
@@ -196,17 +204,20 @@ class VirtualMouse:
         Process a single frame from webcam
         """
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        results = self.hands.process(frame_rgb)
+        timestamp_ms = max(time.monotonic_ns() // 1_000_000, self.last_frame_timestamp_ms + 1)
+        self.last_frame_timestamp_ms = timestamp_ms
+        image = mp.Image(image_format=mp.ImageFormat.SRGB, data=frame_rgb)
+        results = self.hands.detect_for_video(image, timestamp_ms)
 
         # Draw calibration box
         self.draw_calibration_box(frame)
 
-        if results.multi_hand_landmarks:
-            hand_landmarks = results.multi_hand_landmarks[0]
+        if results.hand_landmarks:
+            hand_landmarks = results.hand_landmarks[0]
 
             # Get all landmarks
             landmarks = []
-            for i, landmark in enumerate(hand_landmarks.landmark):
+            for i, landmark in enumerate(hand_landmarks):
                 landmarks.append({
                     'id': i,
                     'x': landmark.x,
@@ -215,10 +226,10 @@ class VirtualMouse:
                 })
 
             # Draw hand landmarks
-            self.mp_drawing.draw_landmarks(
-                frame, hand_landmarks, self.mp_hands.HAND_CONNECTIONS,
-                self.mp_drawing_styles.get_default_hand_landmarks_style(),
-                self.mp_drawing_styles.get_default_hand_connections_style())
+            self.mp_vision.drawing_utils.draw_landmarks(
+                frame, hand_landmarks, self.mp_vision.HandLandmarksConnections.HAND_CONNECTIONS,
+                self.mp_vision.drawing_styles.get_default_hand_landmarks_style(),
+                self.mp_vision.drawing_styles.get_default_hand_connections_style())
 
             if self.mouse_control_enabled:
                 # Get index finger tip position
@@ -320,6 +331,8 @@ class VirtualMouse:
 
         if not cap.isOpened():
             print("Error: Could not open webcam")
+            cap.release()
+            self.hands.close()
             return
 
         print("Camera initialized successfully!")
@@ -363,6 +376,7 @@ class VirtualMouse:
         finally:
             # Cleanup
             cap.release()
+            self.hands.close()
             cv2.destroyAllWindows()
             print("=== Virtual Mouse Stopped ===")
 

@@ -30,7 +30,7 @@ flowchart LR
 
 - Python 3.9 or newer and a desktop session with a webcam.
 - macOS, Windows, or Linux with GUI access. On macOS, grant camera access and Accessibility permission to the terminal or IDE used to run the program.
-- Dependencies listed in [`requirements.txt`](requirements.txt). MediaPipe wheel availability depends on the Python version and platform; if installation fails, use a Python version supported by the current MediaPipe package for your platform.
+- Dependencies listed in [`requirements.txt`](requirements.txt). The app uses MediaPipe Tasks (MediaPipe 0.10.31 or newer) and a small official hand-landmarker model downloaded separately.
 
 ## Setup and run
 
@@ -40,10 +40,13 @@ cd gesture-controlled-virtual-mouse
 python3 -m venv .venv
 source .venv/bin/activate       # Windows: .venv\Scripts\activate
 python -m pip install -r requirements.txt
+python scripts/download_hand_model.py
 python main.py
 ```
 
 The preview opens with mouse control disabled. Focus the preview window and press `t` to enable pointer movement and gestures. Keep the hand visible in the blue rectangle. Press `t` again to pause desktop control, or `q` to close the program. If the camera cannot be opened, check OS camera permission and that another app is not using it.
+
+The model download script verifies the official model's SHA-256 before saving it under `models/`; the model file is intentionally excluded from Git.
 
 ## Verification
 
