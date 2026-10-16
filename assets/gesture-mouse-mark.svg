@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 160" role="img" aria-labelledby="title desc">
+  <title id="title">Gesture Controlled Virtual Mouse</title>
+  <desc id="desc">Original project mark showing a pointer cursor and hand landmark nodes.</desc>
+  <rect width="720" height="160" rx="20" fill="#0f172a"/>
+  <g fill="none" stroke="#38bdf8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M76 38v47m0-47c0-9 14-9 14 0v31m0-22c0-9 14-9 14 0v24m0-17c0-9 14-9 14 0v21m0-14c0-9 14-9 14 0v32c0 25-14 39-38 39H89c-18 0-29-11-29-28V67c0-9 16-9 16 0"/>
+    <path d="m103 65 9 12 11-5m-19-7 2 16" stroke="#a3e635"/>
+  </g>
+  <path d="m133 89 42 30-19 3 11 20-10 5-11-20-11 14z" fill="#f8fafc"/>
+  <text x="205" y="72" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="25" font-weight="700">GESTURE CONTROL</text>
+  <text x="205" y="111" fill="#7dd3fc" font-family="system-ui, sans-serif" font-size="24" font-weight="500">VIRTUAL MOUSE</text>
+</svg>

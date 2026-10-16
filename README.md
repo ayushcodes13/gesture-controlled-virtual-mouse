@@ -1,113 +1,79 @@
-# 🖱️ AI Virtual Mouse: Next-Gen Computer Vision Interface
+# Gesture Controlled Virtual Mouse
 
-[![Python 3.12+](https://img.shields.io/badge/Python-3.12%2B-blue?logo=python&logoColor=white)](https://www.python.org/)
-[![OpenCV](https://img.shields.io/badge/OpenCV-4.8%2B-green?logo=opencv&logoColor=white)](https://opencv.org/)
-[![MediaPipe](https://img.shields.io/badge/MediaPipe-0.10.13-orange?logo=google&logoColor=white)](https://google.github.io/mediapipe/)
-[![PyAutoGUI](https://img.shields.io/badge/PyAutoGUI-0.9.54-red)](https://pyautogui.readthedocs.io/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![Gesture Controlled Virtual Mouse](assets/gesture-mouse-mark.svg)
 
-A high-performance Human-Computer Interaction (HCI) application that leverages **Computer Vision** and **Machine Learning** to control a computer cursor via intuitive hand gestures. This project eliminates the need for physical hardware by using a standard webcam to interpret the user's intent in real-time.
+[![Python](https://img.shields.io/badge/Python-3.9%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![OpenCV](https://img.shields.io/badge/OpenCV-computer_vision-5C3EE8?logo=opencv&logoColor=white)](https://opencv.org/)
+[![MediaPipe](https://img.shields.io/badge/MediaPipe-hand_landmarks-4285F4?logo=google&logoColor=white)](https://ai.google.dev/edge/mediapipe/solutions/vision/hand_landmarker)
 
----
+Control the desktop pointer with a webcam and hand gestures. OpenCV captures and displays the camera feed, MediaPipe detects hand landmarks, and PyAutoGUI sends pointer, click, and scroll actions to the operating system. A physical webcam and local desktop session are required; this project is not a browser app.
 
-## 🎯 **Core Features**
+## What it does
 
-- **Precision Tracking**: Sub-pixel accurate cursor control using the index finger tip.
-- **Smart Gestures**: 
-  - 👆 **Pinch to Click**: Thumb-index pinch for left-click operations.
-  - ✌️ **Dual-Finger Scroll**: Vertical scrolling using index and middle finger tracking.
-- **Motion Smoothing**: Implements a configurable smoothing algorithm to eliminate hand jitter.
-- **Dynamic Calibration**: Active detection zone (80% frame ratio) for optimized screen mapping.
-- **Real-time Performance**: Optimized for 60+ FPS processing on modern hardware.
+- Maps the index fingertip from a centered camera region to screen coordinates, with smoothing.
+- Pinches the thumb and index finger to click, with a short repeat delay.
+- Scrolls when the index and middle fingers are extended and move vertically; a dead zone and cooldown limit jitter.
+- Starts with pointer control **off**. Press `t` in the camera window to enable or disable mouse actions; press `q` to exit.
 
----
+## How the flow works
 
-## 🛠️ **System Architecture**
+```mermaid
+flowchart LR
+    A[Webcam frame] --> B[OpenCV color conversion]
+    B --> C[MediaPipe hand landmarks]
+    C --> D[Gesture and coordinate mapping]
+    D --> E[PyAutoGUI desktop actions]
+    C --> F[Camera preview and status]
+```
 
-The system follows a modular pipeline to ensure low latency and high accuracy:
+## Requirements
 
-1. **Capture**: Frames are captured at 720p/1080p from the local webcam.
-2. **Detection**: MediaPipe's BlazePalm model identifies 21 hand landmarks.
-3. **Coordinate Mapping**: Translation of normalized hand coordinates to OS screen resolution.
-4. **Action Interpretation**: Euclidean distance-based gesture recognition for clicking and scrolling.
-5. **Execution**: System-level events triggered via PyAutoGUI.
+- Python 3.9 or newer and a desktop session with a webcam.
+- macOS, Windows, or Linux with GUI access. On macOS, grant camera access and Accessibility permission to the terminal or IDE used to run the program.
+- Dependencies listed in [`requirements.txt`](requirements.txt). MediaPipe wheel availability depends on the Python version and platform; if installation fails, use a Python version supported by the current MediaPipe package for your platform.
 
-### **Gesture Key**
-| Gesture | OS Action | Visual Indicator |
-| :--- | :--- | :--- |
-| **Index finger pointing** | **Mouse Movement** | Green dot on index tip |
-| **Thumb-index pinch** | **Left Click** | "CLICK!" overlay |
-| **Index + Middle raised** | **Vertical Scroll** | "SCROLL UP/DOWN" overlay |
+## Setup and run
 
----
-
-## 💻 **Tech Stack**
-
-- **Language**: [Python 3.12+](https://python.org)
-- **Vision Engine**: [OpenCV](https://opencv.org) (Image preprocessing and UI overlay)
-- **ML Framework**: [MediaPipe](https://google.github.io/mediapipe/) (Hand landmark tracking)
-- **System Controller**: [PyAutoGUI](https://pyautogui.readthedocs.io/) (OS-level mouse event injection)
-- **Math**: [NumPy](https://numpy.org) (Coordinate smoothing and geometry)
-
----
-
-## 🚀 **Quick Start**
-
-### **1. Environment Setup**
-It is highly recommended to use a virtual environment for the setup:
 ```bash
-# Clone the repository
 git clone https://github.com/ayushcodes13/gesture-controlled-virtual-mouse.git
 cd gesture-controlled-virtual-mouse
-
-# Create and Activate Virtual Environment
 python3 -m venv .venv
-source .venv/bin/activate
-
-# Install Dependencies
-pip install -r requirements.txt
+source .venv/bin/activate       # Windows: .venv\Scripts\activate
+python -m pip install -r requirements.txt
+python main.py
 ```
 
-### **2. Launch Application**
+The preview opens with mouse control disabled. Focus the preview window and press `t` to enable pointer movement and gestures. Keep the hand visible in the blue rectangle. Press `t` again to pause desktop control, or `q` to close the program. If the camera cannot be opened, check OS camera permission and that another app is not using it.
+
+## Verification
+
+The repository includes `check_installation.py` for checking imports, camera access, Python version, and screen dimensions:
+
 ```bash
-# Run the main application
-python3 main.py
+python check_installation.py
 ```
 
-### **3. Interaction Guide**
-- **Move Hand**: Keep your hand within the **Blue Rectangle** for tracking.
-- **Toggle Control**: Press `'t'` to enable/disable mouse control safely.
-- **Exit**: Press `'q'` to close the interface.
+Camera and desktop-control behavior require a physical camera, an interactive display, and OS permissions. Those device-dependent interactions are not represented as verified unless tested on a configured machine. Gesture quality can vary with lighting, camera placement, and hand position; this is a small desktop prototype, not an accessibility or medical device.
 
----
+## Privacy and limits
 
-## 🔧 **Troubleshooting (macOS)**
+Frames are processed locally by the application and are not uploaded by this code. The program has access to the webcam while running and can send desktop pointer actions after control is enabled. Use it only in a trusted local session. Sustained arm positioning can cause fatigue, and precise work may be difficult.
 
-> [!IMPORTANT]
-> **Accessibility Permissions**: macOS requires explicit permission for `PyAutoGUI` to control the mouse.
-> 1. Go to **System Settings** > **Privacy & Security**.
-> 2. Click **Accessibility**.
-> 3. Add and enable your **Terminal** or **IDE** (e.g., VS Code).
+## Deployment
 
-> [!TIP]
-> **Webcam Not Opening?** Check if another app (Zoom, Teams) is using the camera. On Apple Silicon (M1/M2/M3), ensure you are using the ARM64 build of Python for maximum performance.
+Vercel is not suitable for the core workflow: it requires a local webcam, an interactive desktop preview, and OS-level input control. There is no hosted app or deployment URL.
 
----
+## Project files
 
-## 🎓 **Academic Project Note**
-This project was developed as part of a **Computer Vision and HCI** curriculum. It demonstrates the application of real-time pose estimation and its integration with system-level APIs to create seamless human-machine interfaces.
+- [`main.py`](main.py): webcam loop, hand landmark processing, gesture recognition, and desktop actions.
+- [`fixed_main.py`](fixed_main.py): alternate implementation retained in the repository; the documented entry point is `main.py`.
+- [`check_installation.py`](check_installation.py): local environment and device check.
+- [`report.md`](report.md): original academic-style project report. Some reported results and features are not verified by this repository's automated checks; treat them as historical project claims.
 
-## 🔮 **Future Scope**
-- [ ] **Multi-Hand Support**: Separate gestures for left and right hands.
-- [ ] **Voice Integration**: Voice-activated commands for desktop operations.
-- [ ] **Low-Light Optimization**: Improved tracking using IR-capable webcams.
-- [ ] **Custom Gesture Mapping**: Allow users to record and map their own gestures.
+## License
 
----
+No license file is currently included. Check with the project owner before reusing or distributing this code.
 
-### **License**
-Distributed under the MIT License. See `LICENSE` for more information.
+## Author
 
----
-**Developed by [Ayush Rout](https://github.com/ayushcodes13)**  
-*College of Computer Science & Engineering*
+[Ayush Rout](https://github.com/ayushcodes13)
