@@ -50,9 +50,12 @@ class VirtualMouse:
         self.click_cooldown = 0.3  # Buffer to prevent double clicks
         self.last_click_time = 0
 
-        # Scroll: Determined by height of INDEX and MIDDLE fingers
-        self.scroll_finger_threshold = 0.8
+        # Scroll: vertical movement while index and middle fingers are extended
         self.scroll_speed = 5
+        self.scroll_deadzone = 0.025
+        self.scroll_cooldown = 0.15
+        self.last_scroll_time = 0
+        self.prev_scroll_y = None
 
         # --- Camera & Tracking Calibration ---
         self.camera_width = 640
@@ -61,7 +64,7 @@ class VirtualMouse:
         self.detection_region_ratio = 0.8
 
         # --- Runtime State ---
-        self.mouse_control_enabled = True
+        self.mouse_control_enabled = False
         self.toggle_key = ord('t')  # Toggle logic control
         self.prev_frame_time = 0
         self.fps = 0
@@ -124,27 +127,32 @@ class VirtualMouse:
 
     def check_scroll_gesture(self, landmarks: List[Dict]) -> str:
         """
-        Detect scroll gesture (two fingers up)
-        Returns 'up', 'down', or None
+        Detect vertical movement while the index and middle fingers are raised.
+        Returns 'up', 'down', or None. Small movements are ignored to reduce jitter.
         """
-        # Get finger positions
+        # Require both fingers to be extended, using their PIP joints as a reference.
         index_tip = landmarks[8]['y']
+        index_pip = landmarks[6]['y']
         middle_tip = landmarks[12]['y']
+        middle_pip = landmarks[10]['y']
 
-        # Check if both fingers are high (relatively low y values)
-        if index_tip < self.scroll_finger_threshold and middle_tip < self.scroll_finger_threshold:
+        if not (index_tip < index_pip and middle_tip < middle_pip):
+            self.prev_scroll_y = None
+            return None
 
-            # Determine scroll direction based on finger vertical movement
-            middle_pip = landmarks[10]['y']  # Middle finger PIP joint
+        avg_y = (index_tip + middle_tip) / 2
+        if self.prev_scroll_y is None:
+            self.prev_scroll_y = avg_y
+            return None
 
-            # Scroll up if fingers are higher, down if lower
-            avg_y = (index_tip + middle_tip) / 2
-            if avg_y < 0.5:
-                return 'up'
-            else:
-                return 'down'
+        delta = avg_y - self.prev_scroll_y
+        self.prev_scroll_y = avg_y
+        now = time.time()
+        if abs(delta) < self.scroll_deadzone or now - self.last_scroll_time < self.scroll_cooldown:
+            return None
 
-        return None
+        self.last_scroll_time = now
+        return 'down' if delta > 0 else 'up'
 
     def fingers_up(self, landmarks: List[Dict]) -> int:
         """
