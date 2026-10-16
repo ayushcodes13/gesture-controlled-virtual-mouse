@@ -149,3 +149,6 @@ cython_debug/
 # macOS
 .DS_Store
 ._*
+/models/hand_landmarker.task
+*.task.part
+.tmp/
