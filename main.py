@@ -36,7 +36,9 @@ class VirtualMouse:
         )
 
         # --- System & Mouse Settings ---
-        pyautogui.FAILSAFE = False  # Allows moving mouse to screen corners
+        # Keep PyAutoGUI's emergency stop active while the user controls the
+        # pointer. Moving it to a screen corner raises FailSafeException.
+        pyautogui.FAILSAFE = True
         self.screen_width, self.screen_height = pyautogui.size()
 
         # Movement Smoothing (0.0 to 1.0)
@@ -234,7 +236,7 @@ class VirtualMouse:
                 try:
                     pyautogui.moveTo(screen_x, screen_y)
                 except pyautogui.FailSafeException:
-                    pass
+                    raise
                 except Exception as e:
                     print(f"Mouse move error: {e}")
 
@@ -252,6 +254,8 @@ class VirtualMouse:
                         self.last_click_time = current_time
                         cv2.putText(frame, "CLICK!", (10, 200),
                                    cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+                    except pyautogui.FailSafeException:
+                        raise
                     except Exception as e:
                         print(f"Click error: {e}")
 
@@ -352,6 +356,8 @@ class VirtualMouse:
 
         except KeyboardInterrupt:
             print("\nProgram interrupted by user")
+        except pyautogui.FailSafeException:
+            print("\nPyAutoGUI fail-safe triggered; stopping mouse control.")
         except Exception as e:
             print(f"Error: {str(e)}")
         finally:

@@ -57,7 +57,7 @@ Camera and desktop-control behavior require a physical camera, an interactive di
 
 ## Privacy and limits
 
-Frames are processed locally by the application and are not uploaded by this code. The program has access to the webcam while running and can send desktop pointer actions after control is enabled. Use it only in a trusted local session. Sustained arm positioning can cause fatigue, and precise work may be difficult.
+Frames are processed locally by the application and are not uploaded by this code. The program has access to the webcam while running and can send desktop pointer actions after control is enabled. PyAutoGUI's fail-safe stays enabled; if it triggers during a mouse action, the application reports it and stops. Use the app only in a trusted local session. Sustained arm positioning can cause fatigue, and precise work may be difficult.
 
 ## Deployment
 
