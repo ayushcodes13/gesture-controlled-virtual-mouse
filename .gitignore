@@ -130,7 +130,11 @@ venv.bak/
 .ropeproject
 
 # mkdocs documentation
-/site
+/site/*
+!/site/index.html
+!/site/styles.css
+!/site/assets/
+!/site/assets/*.svg
 
 # mypy
 .mypy_cache/

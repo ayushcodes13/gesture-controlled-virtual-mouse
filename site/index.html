@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101313">
+  <meta name="description" content="A local Python computer-vision prototype that maps hand gestures to desktop pointer actions.">
+  <title>Gesture Mouse — hand tracking for the desktop</title>
+  <link rel="icon" href="assets/gesture-mouse-symbol.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="Gesture Mouse home">
+      <img src="assets/gesture-mouse-symbol.svg" alt="" width="34" height="34">
+      <span>Gesture Mouse</span>
+    </a>
+    <a class="top-link" href="https://github.com/ayushcodes13/gesture-controlled-virtual-mouse">View source <span aria-hidden="true">↗</span></a>
+  </header>
+
+  <main id="top">
+    <section class="hero wrap" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="status-dot"></span> Local computer-vision prototype</p>
+        <h1 id="hero-title">A hand gesture.<br><span>A desktop action.</span></h1>
+        <p class="intro">A Python desktop experiment that follows hand landmarks from a webcam and maps a few gestures to the operating system pointer.</p>
+        <div class="hero-actions">
+          <a class="button primary" href="https://github.com/ayushcodes13/gesture-controlled-virtual-mouse#quick-start">Run it locally <span aria-hidden="true">↗</span></a>
+          <a class="button secondary" href="#how-it-works">See the flow <span aria-hidden="true">↓</span></a>
+        </div>
+        <p class="boundary"><strong>Not a browser app.</strong> Camera, preview window, and pointer control run on your own computer.</p>
+      </div>
+      <aside class="hero-card" aria-label="Project details">
+        <div class="card-top"><span>PROJECT SNAPSHOT</span><span class="live-tag">LOCAL</span></div>
+        <img class="project-mark" src="assets/gesture-mouse-symbol.svg" alt="Gesture Mouse project mark">
+        <p class="card-caption">Camera in. Landmarks through. Desktop actions out.</p>
+        <div class="chips"><span>Python</span><span>OpenCV</span><span>MediaPipe</span><span>PyAutoGUI</span></div>
+        <div class="card-foot"><span>Desktop prototype</span><span>macOS · Windows · Linux</span></div>
+      </aside>
+    </section>
+
+    <section class="flow-section" id="how-it-works" aria-labelledby="flow-title">
+      <div class="wrap">
+        <div class="section-heading">
+          <p class="eyebrow">THE PIPELINE</p>
+          <h2 id="flow-title">From camera frame<br>to pointer movement.</h2>
+          <p>This is an authored workflow diagram based on the repository implementation, not a captured application screenshot.</p>
+        </div>
+        <div class="flow" aria-label="Webcam frame flows through OpenCV and MediaPipe to gesture mapping and PyAutoGUI desktop actions; hand landmarks also feed the camera preview.">
+          <article class="step"><span class="step-index">01</span><div class="step-icon camera-icon" aria-hidden="true"><i></i></div><h3>Capture</h3><p>OpenCV reads frames from the local webcam.</p><small>WEBCAM</small></article>
+          <span class="connector" aria-hidden="true">→</span>
+          <article class="step"><span class="step-index">02</span><div class="step-icon landmarks-icon" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div><h3>Track</h3><p>MediaPipe estimates hand landmarks in each frame.</p><small>HAND LANDMARKS</small></article>
+          <span class="connector" aria-hidden="true">→</span>
+          <article class="step"><span class="step-index">03</span><div class="step-icon gesture-icon" aria-hidden="true"><b>✳</b></div><h3>Map</h3><p>Gesture and coordinate logic maps movement and pinches.</p><small>GESTURE LOGIC</small></article>
+          <span class="connector" aria-hidden="true">→</span>
+          <article class="step action-step"><span class="step-index">04</span><div class="step-icon pointer-icon" aria-hidden="true"><b>↖</b></div><h3>Act</h3><p>PyAutoGUI sends pointer, click, and scroll actions.</p><small>DESKTOP CONTROL</small></article>
+        </div>
+        <div class="preview-branch"><span class="branch-line" aria-hidden="true"></span><span class="branch-chip">Landmarks also appear in the local camera preview</span><span class="branch-line" aria-hidden="true"></span></div>
+      </div>
+    </section>
+
+    <section class="gestures wrap" aria-labelledby="gestures-title">
+      <div class="section-heading compact"><p class="eyebrow">CONTROLS</p><h2 id="gestures-title">A small set of deliberate actions.</h2></div>
+      <div class="gesture-grid">
+        <article><span class="gesture-number">01</span><div><h3>Move</h3><p>Place the index fingertip inside the blue tracking box to move the pointer, with smoothing.</p></div><span class="gesture-symbol" aria-hidden="true">↗</span></article>
+        <article><span class="gesture-number">02</span><div><h3>Pinch</h3><p>Bring thumb and index finger together for a click with a short repeat delay.</p></div><span class="gesture-symbol pinch" aria-hidden="true">◉</span></article>
+        <article><span class="gesture-number">03</span><div><h3>Scroll</h3><p>Raise index and middle fingers, then move vertically to scroll.</p></div><span class="gesture-symbol" aria-hidden="true">↕</span></article>
+      </div>
+    </section>
+
+    <section class="requirements">
+      <div class="wrap requirements-inner">
+        <div><p class="eyebrow">BEFORE YOU RUN IT</p><h2>Built for a local desktop.</h2></div>
+        <ul>
+          <li>Python 3.9+ with project dependencies installed</li>
+          <li>A webcam and an interactive graphical desktop</li>
+          <li>Camera access; on macOS, Accessibility permission for pointer control</li>
+          <li>The hand-landmarker model downloaded by the provided script</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="privacy wrap">
+      <div class="privacy-mark" aria-hidden="true">◎</div>
+      <div><p class="eyebrow">LOCAL PROCESSING</p><h2>Frames stay on your machine.</h2><p>The project code processes webcam frames locally. Desktop actions are disabled until you press <kbd>t</kbd> in the camera window. Press <kbd>q</kbd> to exit. This static page has no webcam access, API, or gesture simulator.</p></div>
+      <a class="text-link" href="https://github.com/ayushcodes13/gesture-controlled-virtual-mouse#privacy-and-limits">Privacy &amp; limits <span aria-hidden="true">↗</span></a>
+    </section>
+
+    <section class="final-cta"><div class="wrap cta-inner"><div><p class="eyebrow">TRY THE DESKTOP PROJECT</p><h2>Bring your own camera.<br>Keep control in your hands.</h2></div><a class="button primary" href="https://github.com/ayushcodes13/gesture-controlled-virtual-mouse#quick-start">Read the setup guide <span aria-hidden="true">↗</span></a></div></section>
+  </main>
+
+  <footer class="wrap footer"><a class="brand" href="#top"><img src="assets/gesture-mouse-symbol.svg" alt="" width="27" height="27"><span>Gesture Mouse</span></a><p>Static project presentation · The actual app runs locally</p><a href="https://github.com/ayushcodes13/gesture-controlled-virtual-mouse">Source on GitHub ↗</a></footer>
+</body>
+</html>
