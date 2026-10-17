@@ -71,7 +71,7 @@ Frames are processed locally by the application and are not uploaded by this cod
 
 ## Deployment
 
-The core workflow is a native desktop application. Vercel cannot provide its local webcam, interactive OpenCV preview, or OS-level pointer control. The self-contained [`site/`](site/) directory is a static project presentation only; it has no camera access or interactive gesture demo. To publish that presentation on Vercel, import this repository, set the Root Directory to `site`, select the Other framework preset, and leave build and output commands empty. No deployment has been created from this repository yet.
+The core workflow is a native desktop application. Vercel cannot provide its local webcam, interactive OpenCV preview, or OS-level pointer control. The self-contained [`site/`](site/) directory is a static project presentation only; it has no camera access or interactive gesture demo. It is deployed at [gesture-controlled-virtual-mouse.devayushrout.me](https://gesture-controlled-virtual-mouse.devayushrout.me) from the `site/` directory using Vercel's Other framework preset with no build or output commands. The hosted page does not run the desktop application.
 
 ## Project files
 
