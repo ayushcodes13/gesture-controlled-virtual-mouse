@@ -6,14 +6,19 @@
 [![OpenCV](https://img.shields.io/badge/OpenCV-computer_vision-5C3EE8?logo=opencv&logoColor=white)](https://opencv.org/)
 [![MediaPipe](https://img.shields.io/badge/MediaPipe-hand_landmarks-4285F4?logo=google&logoColor=white)](https://ai.google.dev/edge/mediapipe/solutions/vision/hand_landmarker)
 
-Control the desktop pointer with a webcam and hand gestures. OpenCV captures and displays the camera feed, MediaPipe detects hand landmarks, and PyAutoGUI sends pointer, click, and scroll actions to the operating system. A physical webcam and local desktop session are required; this project is not a browser app.
+Control the desktop pointer with a webcam and hand gestures. The local camera window shows the live image, detected hand landmarks, the tracking area, and whether desktop control is enabled. OpenCV captures and displays frames, MediaPipe detects hand landmarks, and PyAutoGUI sends pointer, click, and scroll actions to the operating system. A physical webcam and local desktop session are required; this project is not a browser app.
 
 ## What it does
 
-- Maps the index fingertip from a centered camera region to screen coordinates, with smoothing.
-- Pinches the thumb and index finger to click, with a short repeat delay.
-- Scrolls when the index and middle fingers are extended and move vertically; a dead zone and cooldown limit jitter.
-- Starts with pointer control **off**. Press `t` in the camera window to enable or disable mouse actions; press `q` to exit.
+| Gesture or control | Desktop action |
+| --- | --- |
+| Move the index fingertip inside the blue tracking box | Move the pointer, with smoothing |
+| Pinch thumb and index finger | Click, with a short repeat delay |
+| Raise index and middle fingers and move vertically | Scroll; a dead zone and cooldown reduce jitter |
+| Press `t` in the camera window | Enable or pause desktop control |
+| Press `q` in the camera window | Exit |
+
+The preview starts with desktop control **off**. Hand tracking remains visible while control is paused.
 
 ## How the flow works
 
@@ -32,7 +37,7 @@ flowchart LR
 - macOS, Windows, or Linux with GUI access. On macOS, grant camera access and Accessibility permission to the terminal or IDE used to run the program.
 - Dependencies listed in [`requirements.txt`](requirements.txt). The app uses MediaPipe Tasks (MediaPipe 0.10.31 or newer) and a small official hand-landmarker model downloaded separately.
 
-## Setup and run
+## Quick start
 
 ```bash
 git clone https://github.com/ayushcodes13/gesture-controlled-virtual-mouse.git
@@ -44,11 +49,13 @@ python scripts/download_hand_model.py
 python main.py
 ```
 
-The preview opens with mouse control disabled. Focus the preview window and press `t` to enable pointer movement and gestures. Keep the hand visible in the blue rectangle. Press `t` again to pause desktop control, or `q` to close the program. If the camera cannot be opened, check OS camera permission and that another app is not using it.
+The preview opens with desktop control disabled. Focus the preview window and press `t` to enable pointer movement and gestures. Keep the hand visible in the blue rectangle. Press `t` again to pause desktop control, or `q` to close the program. If the camera cannot be opened, check OS camera permission and that another app is not using it.
 
 The model download script verifies the official model's SHA-256 before saving it under `models/`; the model file is intentionally excluded from Git.
 
-## Verification
+## Preview and verification
+
+The product UI is the local OpenCV camera window; there is no browser control panel. A real UI screenshot requires the application to run on a machine with the dependencies installed, an accessible webcam, and a graphical desktop. Screenshots are not included because those device-dependent conditions were unavailable in the documentation environment; the diagram below describes the implemented data flow, not a captured runtime.
 
 The repository includes `check_installation.py` for checking imports, camera access, Python version, and screen dimensions:
 
@@ -68,7 +75,7 @@ Vercel is not suitable for the core workflow: it requires a local webcam, an int
 
 ## Project files
 
-- [`main.py`](main.py): webcam loop, hand landmark processing, gesture recognition, and desktop actions.
+- [`main.py`](main.py): webcam loop, hand landmark processing, gesture recognition, preview window, and desktop actions.
 - [`fixed_main.py`](fixed_main.py): alternate implementation retained in the repository; the documented entry point is `main.py`.
 - [`check_installation.py`](check_installation.py): local environment and device check.
 - [`report.md`](report.md): original academic-style project report. Some reported results and features are not verified by this repository's automated checks; treat them as historical project claims.
