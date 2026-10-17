@@ -55,7 +55,11 @@ The model download script verifies the official model's SHA-256 before saving it
 
 ## Preview and verification
 
-The product UI is the local OpenCV camera window; there is no browser control panel. A real UI screenshot requires the application to run on a machine with the dependencies installed, an accessible webcam, and a graphical desktop. Screenshots are not included because those device-dependent conditions were unavailable in the documentation environment; the diagram below describes the implemented data flow, not a captured runtime.
+The product UI is the local OpenCV camera window; there is no browser control panel. The screenshot below shows the **static project presentation** captured in Aside Browser from the local `site/` build. It is documentation UI, not the running gesture-control application.
+
+![Gesture Mouse static project presentation, captured in Aside Browser](assets/gesture-mouse-presentation.png)
+
+A screenshot of the actual camera window requires the application to run on a machine with the dependencies installed, an accessible webcam, and a graphical desktop. That device-dependent runtime was unavailable in the documentation environment, so no camera or pointer-control behavior is represented as visually verified. The workflow diagram above describes the implemented data flow, not a captured runtime.
 
 The repository includes `check_installation.py` for checking imports, camera access, Python version, and screen dimensions:
 
