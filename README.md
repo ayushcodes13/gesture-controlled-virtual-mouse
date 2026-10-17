@@ -71,7 +71,7 @@ Frames are processed locally by the application and are not uploaded by this cod
 
 ## Deployment
 
-Vercel is not suitable for the core workflow: it requires a local webcam, an interactive desktop preview, and OS-level input control. There is no hosted app or deployment URL.
+The core workflow is a native desktop application. Vercel cannot provide its local webcam, interactive OpenCV preview, or OS-level pointer control. The self-contained [`site/`](site/) directory is a static project presentation only; it has no camera access or interactive gesture demo. To publish that presentation on Vercel, import this repository, set the Root Directory to `site`, select the Other framework preset, and leave build and output commands empty. No deployment has been created from this repository yet.
 
 ## Project files
 
