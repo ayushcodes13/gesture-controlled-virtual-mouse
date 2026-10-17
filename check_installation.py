@@ -62,11 +62,11 @@ def check_camera():
 def check_python_version():
     """Check Python version compatibility"""
     python_version = sys.version_info
-    if python_version >= (3, 7):
+    if python_version >= (3, 9):
         print(f"✅ Python {python_version.major}.{python_version.minor}.{python_version.micro} is compatible")
         return True
     else:
-        print(f"❌ Python {python_version.major}.{python_version.minor} is not compatible (need 3.7+)")
+        print(f"❌ Python {python_version.major}.{python_version.minor} is not compatible (need 3.9+)")
         return False
 
 def check_screen_size():
