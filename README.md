@@ -1,6 +1,6 @@
-# Gesture Controlled Virtual Mouse
-
 ![Gesture Controlled Virtual Mouse](assets/gesture-mouse-mark.svg)
+
+# Gesture Controlled Virtual Mouse
 
 [![Python](https://img.shields.io/badge/Python-3.9%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![OpenCV](https://img.shields.io/badge/OpenCV-computer_vision-5C3EE8?logo=opencv&logoColor=white)](https://opencv.org/)
